@@ -1,5 +1,6 @@
 ofxGui
 ofxLiveShader
+ofxNDI
 ofxOpenCv
 ofxOsc
 ofxPoco
