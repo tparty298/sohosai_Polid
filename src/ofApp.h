@@ -53,7 +53,7 @@ public:
     //utils
     void setupQuadWarper();
     void allocateFbos();
-    bool bDebug = false;
+    bool bDebug = true;
     //--------
     
     //warper
@@ -69,6 +69,22 @@ public:
     
     float current_time = -1.0;
     bool isUpdate = false;
+    
+    
+    
+    void debugDraw();
+    ofImage idImg;
+  
+    int id = 0;
+    
+    
+    
+    string log = "";
+    
+    
+    
+    float alpha = 0.0;
+    
     
     
     

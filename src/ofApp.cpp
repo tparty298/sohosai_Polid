@@ -2,46 +2,90 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    bDebug = false;
     ofBackground(0);
+   // ofEnableDepthTest();
+        ofBuffer buffer = ofBufferFromFile("settings.txt");
+    
+    if(buffer.size()) {
+        
+        for (ofBuffer::Line it = buffer.getLines().begin(), end = buffer.getLines().end(); it != end; ++it) {
+            
+            string line = *it;
+            
+            // copy the line to draw later
+            // make sure its not a empty line
+            if(line.empty() == false) {
+                id = atoi(line.c_str());
+            }
+            
+            // print out the line
+            //cout << line << endl;
+            
+            
+        }
+        
+    }
+    
+    idImg.load(ofToString(id)+".png");
+    
+    
+    
+    
+    //-------
+    
+    
+    
     //ofToggleFullscreen();
     setupQuadWarper();
-    video.load("yura_reha.mov");
+    
+    video.load("dance_ex.mov");
+    video.setVolume(0.0);
+    video.play();
     isUpdate = false;
     
-    video.setLoopState(OF_LOOP_NONE);
+    video.setLoopState(OF_LOOP_NORMAL);
         fbo.allocate(WIDTH,HEIGHT);
     
-    ofxSubscribeOsc(PORT,"/3/time_code",current_time);
+    ofxSubscribeOsc(PORT,"/3/current_time",current_time);
     
     ofxSubscribeOsc(PORT,"/3/stop",[=](){
+        log = "stop";
         isUpdate = false;
+        video.stop();
     });
     
     ofxSubscribeOsc(PORT,"/3/reset",[=](){
+        log = "reset";
         isUpdate = false;
         isStart = false;
         current_time = -1.0;
         video.setFrame(0);
+        video.stop();
+        
     });
     ofxSubscribeOsc(PORT,"/3/seek",[=](float val){
+        log = "seek"+ofToString(val);
         int frame = val*60.0;
         video.setFrame(frame);
+        video.play();
+    });
+    ofxSubscribeOsc(PORT,"/3/debug",bDebug);
+    
+    ofxSubscribeOsc(PORT, "/3/hey", [=](){
+        log = "hey";
+        alpha = 1.0;
     });
     
     
-    
-    
-    
-    
-    
-    
-    
-    
+
     
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    alpha += (0.0-alpha)/4.0;
+    
     if(isStart == false&&current_time>=0.0){
         //始まってない状態で何秒って情報を受ける
         //フレーム数に変換　具体的には60掛け
@@ -59,11 +103,20 @@ void ofApp::update(){
     
     
     
+    video.update();
+    
+    
     
     fbo.begin();
     ofClear(0,255);
+    ofSetColor(255);
     video.draw(0.0,0.0,WIDTH,HEIGHT);
+    if(bDebug){
+    idImg.draw(0.0,0.0,WIDTH,HEIGHT);
+    }
+    
     fbo.end();
+    
     
     
     
@@ -107,15 +160,27 @@ void ofApp::draw(){
     }else{
         ofDrawBitmapString("waiting", 10, 20);
     }
+   
     
     ofDrawBitmapString("s show Handle", 10, 40);
         ofDrawBitmapString("h save Handle", 10, 50);
-    ofDrawBitmapString("1-4 bind handle to cursor", 10, 60);
-       ofDrawBitmapString("yoroshikune", 10, 70);
+    if(bDebug){
+        ofDrawBitmapString("debug:true", 10, 60);
+        
+    }else{
+        ofDrawBitmapString("debug:false", 10, 60);
+    }
+    ofDrawBitmapString("1-4 bind handle to cursor", 10, 70);
+    
+    ofDrawBitmapString("id:"+ofToString(id), 10, 80);
+       ofDrawBitmapString("yoroshikune", 10, 90);
     
     
+     ofDrawBitmapString("latest received current_time:"+ofToString(current_time), 10,  100);
+         ofDrawBitmapString("latest received signal:"+log, 10,  110);
     
     
+   
     
     
     
@@ -126,7 +191,7 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key){
     
     if(key == 'a'){
-        bDebug = !bDebug;
+      //  bDebug = !bDebug;
     }
     if(key == 's' || key == 'S') {
         warper.toggleShow();
@@ -140,6 +205,13 @@ void ofApp::keyPressed(int key){
         warper.save();
     }
     
+    if(key== 'd'){
+        bDebug = !bDebug;
+    }
+    
+    if(key == 't'){
+        ofToggleFullscreen();
+    }
     
 }
 
@@ -167,6 +239,7 @@ void ofApp::setupQuadWarper(){
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
+
     
 }
 
