@@ -4,39 +4,21 @@
 void ofApp::setup(){
     bDebug = false;
     ofBackground(0);
-   // ofEnableDepthTest();
-        ofBuffer buffer = ofBufferFromFile("settings.txt");
+    ofBuffer buffer = ofBufferFromFile("settings.txt");
     
     if(buffer.size()) {
-        
         for (ofBuffer::Line it = buffer.getLines().begin(), end = buffer.getLines().end(); it != end; ++it) {
-            
             string line = *it;
-            
-            // copy the line to draw later
-            // make sure its not a empty line
             if(line.empty() == false) {
                 id = atoi(line.c_str());
             }
-            
-            // print out the line
-            //cout << line << endl;
-            
-            
         }
-        
     }
     
     idImg.load(ofToString(id)+".png");
     
-    
-    
-    
     //-------
     
-    
-    
-    //ofToggleFullscreen();
     setupQuadWarper();
     
     video.load("dance_ex.mov");
@@ -45,7 +27,7 @@ void ofApp::setup(){
     isUpdate = false;
     
     video.setLoopState(OF_LOOP_NORMAL);
-        fbo.allocate(WIDTH,HEIGHT);
+    fbo.allocate(WIDTH,HEIGHT);
     
     ofxSubscribeOsc(PORT,"/3/current_time",current_time);
     
@@ -77,9 +59,6 @@ void ofApp::setup(){
         alpha = 1.0;
     });
     
-    
-
-    
 }
 
 //--------------------------------------------------------------
@@ -101,69 +80,61 @@ void ofApp::update(){
         video.update();
     }
     
-    
-    
     video.update();
-    
-    
     
     fbo.begin();
     ofClear(0,255);
     ofSetColor(255);
     video.draw(0.0,0.0,WIDTH,HEIGHT);
     if(bDebug){
-    idImg.draw(0.0,0.0,WIDTH,HEIGHT);
+        idImg.draw(0.0,0.0,WIDTH,HEIGHT);
     }
     
     fbo.end();
-    
-    
-    
-    
-    
-    
-    
     
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    drawTexture();
+    drawWarper();
+    ofSetColor(255);
+    drawBitmapStrings();
+}
+
+void ofApp::drawTexture(){
     ofMatrix4x4 mat = warper.getMatrix();
-    
-    //======================== use the matrix to transform our fbo.
-    
     ofPushMatrix();
     ofMultMatrix(mat);
-    //fbo.draw(0, 0,WIDTH,HEIGHT);
     fbo.draw(0.0,0.0,WIDTH,HEIGHT);
-    
     ofPopMatrix();
-    
+}
+
+void ofApp::drawWarper(){
     ofSetColor(ofColor::magenta);
     warper.drawQuadOutline();
-    
     ofSetColor(ofColor::yellow);
     warper.drawCorners();
-    
     ofSetColor(ofColor::magenta);
     warper.drawHighlightedCorner();
-    
     ofSetColor(ofColor::red);
     warper.drawSelectedCorner();
-    ofSetColor(255);
+}
+
+void ofApp::drawBitmapStrings(){
     
     ofDrawBitmapString("PolidMappingSystem by TParty on sohosaiZenya", 10, 10);
     
     ofDrawBitmapString(ofToString(video.getCurrentFrame())+"/"+ofToString(video.getTotalNumFrames()), 10, 30);
     if(isStart){
-       ofDrawBitmapString("starting", 10, 20);
+        ofDrawBitmapString("starting", 10, 20);
     }else{
         ofDrawBitmapString("waiting", 10, 20);
     }
-   
+    
     
     ofDrawBitmapString("s show Handle", 10, 40);
-        ofDrawBitmapString("h save Handle", 10, 50);
+    ofDrawBitmapString("h save Handle", 10, 50);
     if(bDebug){
         ofDrawBitmapString("debug:true", 10, 60);
         
@@ -173,25 +144,18 @@ void ofApp::draw(){
     ofDrawBitmapString("1-4 bind handle to cursor", 10, 70);
     
     ofDrawBitmapString("id:"+ofToString(id), 10, 80);
-       ofDrawBitmapString("yoroshikune", 10, 90);
+    ofDrawBitmapString("yoroshikune", 10, 90);
     
     
-     ofDrawBitmapString("latest received current_time:"+ofToString(current_time), 10,  100);
-         ofDrawBitmapString("latest received signal:"+log, 10,  110);
-    
-    
-   
-    
-    
-    
+    ofDrawBitmapString("latest received current_time:"+ofToString(current_time), 10,  100);
+    ofDrawBitmapString("latest received signal:"+log, 10,  110);
 }
-
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     
     if(key == 'a'){
-      //  bDebug = !bDebug;
+        //  bDebug = !bDebug;
     }
     if(key == 's' || key == 'S') {
         warper.toggleShow();
@@ -233,57 +197,3 @@ void ofApp::setupQuadWarper(){
     warper.load(); // reload last saved changes.
 }
 
-
-
-
-
-//--------------------------------------------------------------
-void ofApp::keyReleased(int key){
-
-    
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
-    
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
-    
-}
-
-//--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
-    
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
-    
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseEntered(int x, int y){
-    
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseExited(int x, int y){
-    
-}
-
-//--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
-    
-}
-
-//--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){
-    
-}
-
-//--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){
-    
-}

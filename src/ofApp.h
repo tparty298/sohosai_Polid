@@ -17,8 +17,6 @@
 #define WIDTH  1000
 #define HEIGHT 1800
 
-
-
 //本番用です〜〜よろしくお願いします〜〜
 
 using namespace glm;
@@ -29,24 +27,13 @@ class ofApp : public ofBaseApp{
 public:
     void update();
     void draw();
-    
     void keyPressed(int key);
-    void keyReleased(int key);
-    void mouseMoved(int x, int y );
-    void mouseDragged(int x, int y, int button);
-    void mousePressed(int x, int y, int button);
-    void mouseReleased(int x, int y, int button);
-    void mouseEntered(int x, int y);
-    void mouseExited(int x, int y);
-    void windowResized(int w, int h);
-    void dragEvent(ofDragInfo dragInfo);
-    void gotMessage(ofMessage msg);
+    void drawBitmapStrings();
+    void drawWarper();
+    void drawTexture();
+    void setupOsc();
     
-
-
     ofxPanel gui;
-    ofEasyCam cam;
-    
     ofVideoPlayer video;
     
     
@@ -61,35 +48,13 @@ public:
     ofFbo fbo;
     ofPoint points[10];
     //-----
-    //OSC
-    void setupOsc();
-
     
     bool isStart = false;
-    
     float current_time = -1.0;
     bool isUpdate = false;
-    
-    
-    
     void debugDraw();
     ofImage idImg;
-  
     int id = 0;
-    
-    
-    
     string log = "";
-    
-    
-    
     float alpha = 0.0;
-    
-    
-    
-    
-    
-    
-
-    
 };
