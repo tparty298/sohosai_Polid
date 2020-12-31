@@ -8,6 +8,8 @@
 #include "ofxPubSubOsc.h"
 #include "ofxQuadWarp.h"
 #include "ofxSyphon.h"
+#include "ofxNDIReceiver.h"
+#include "ofxNDIRecvStream.h"
 
 
 
@@ -32,7 +34,9 @@ public:
     void drawWarper();
     void drawTexture();
     void setupOsc();
-    
+    void setupNDI();
+    void updateTexture();
+private:
     ofxPanel gui;
     ofVideoPlayer video;
     
@@ -57,4 +61,9 @@ public:
     int id = 0;
     string log = "";
     float alpha = 0.0;
+    
+    ofxNDIReceiver receiver_;
+    ofxNDIRecvVideoFrameSync video_;
+    ofPixels pixels_;
+
 };

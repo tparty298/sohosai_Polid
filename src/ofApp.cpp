@@ -14,6 +14,7 @@ void ofApp::setup(){
             }
         }
     }
+    setupNDI();
     
     idImg.load(ofToString(id)+".png");
     
@@ -61,37 +62,48 @@ void ofApp::setup(){
     
 }
 
-//--------------------------------------------------------------
-void ofApp::update(){
-    alpha += (0.0-alpha)/4.0;
-    
-    if(isStart == false&&current_time>=0.0){
-        //始まってない状態で何秒って情報を受ける
-        //フレーム数に変換　具体的には60掛け
-        //setFrameしてからあとはかってに走り出してもらう
-        int frame = current_time*60.0;
-        video.setFrame(frame);
-        video.play();
-        isStart = true;
-        isUpdate = true;
+void ofApp::setupNDI(){
+    NDIlib_initialize();
+    auto findSource = [](const string &name_or_url) {
+        auto sources = ofxNDI::listSources();
+        if(name_or_url == "") {
+            return make_pair(ofxNDI::Source(), false);
+        }
+        auto found = find_if(std::begin(sources), std::end(sources), [name_or_url](const ofxNDI::Source &s) {
+            return ofIsStringInString(s.p_ndi_name, name_or_url) || ofIsStringInString(s.p_url_address, name_or_url);
+        });
+        if(found == std::end(sources)) {
+            ofLogWarning("ofxNDI") << "no NDI source found by string:" << name_or_url;
+            return make_pair(ofxNDI::Source(), false);
+        }
+        return make_pair(*found, true);
+    };
+    string name_or_url = "";    // Specify name or address of expected NDI source. In case of blank or not found, receiver will grab default(which is found first) source.
+    auto result = findSource(name_or_url);
+    if(result.second ? receiver_.setup(result.first) : receiver_.setup()) {
+        video_.setup(receiver_);
+    }
+}
+void ofApp::updateTexture(){
+    if(receiver_.isConnected()) {
+        video_.update();
+        if(video_.isFrameNew()) {
+            video_.decodeTo(pixels_);
+            fbo.begin();
+            ofClear(0,255);
+            ofSetColor(255);
+            if(pixels_.isAllocated()) {
+                ofImage(pixels_).draw(0,0);
+            }
+            fbo.end();        }
         
     }
-    if(isUpdate){
-        video.update();
-    }
+}
+
+//--------------------------------------------------------------
+void ofApp::update(){
     
-    video.update();
-    
-    fbo.begin();
-    ofClear(0,255);
-    ofSetColor(255);
-    video.draw(0.0,0.0,WIDTH,HEIGHT);
-    if(bDebug){
-        idImg.draw(0.0,0.0,WIDTH,HEIGHT);
-    }
-    
-    fbo.end();
-    
+    updateTexture();
 }
 
 //--------------------------------------------------------------
