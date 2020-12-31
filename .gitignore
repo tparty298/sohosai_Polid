@@ -1,1 +1,13 @@
 *.mov
+bin/data/id3.mp4
+sohosai_mapping.maxpat
+sohosaio_polidMapper.xcodeproj/project.pbxproj
+sohosaio_polidMapper.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+sohosaio_polidMapper.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+sohosaio_polidMapper.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
+sohosaio_polidMapper.xcodeproj/project.xcworkspace/xcuserdata/okuyama.xcuserdatad/UserInterfaceState.xcuserstate
+sohosaio_polidMapper.xcodeproj/project.xcworkspace/xcuserdata/yutaokuyama.xcuserdatad/UserInterfaceState.xcuserstate
+sohosaio_polidMapper.xcodeproj/xcshareddata/xcschemes/sohosaio_polidMapper Debug.xcscheme
+sohosaio_polidMapper.xcodeproj/xcshareddata/xcschemes/sohosaio_polidMapper Release.xcscheme
+bin/sohosaio_polidMapperDebug.app/Contents/Frameworks/Syphon.framework/Versions/A/_CodeSignature/CodeResources
+bin/sohosaio_polidMapperDebug.app/Contents/_CodeSignature/CodeResources
