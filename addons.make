@@ -1,0 +1,9 @@
+ofxGui
+ofxLiveShader
+ofxOpenCv
+ofxOsc
+ofxPoco
+ofxPubSubOsc
+ofxQuadWarp-modified
+ofxSyphon
+ofxXmlSettings
